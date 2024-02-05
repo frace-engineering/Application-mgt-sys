@@ -3,7 +3,7 @@
 from os import getenv
 from sqlalchemy import Column, String, Integer, ForeignKey 
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from service_provider import User
 
 Base = declarative_base()
@@ -18,8 +18,8 @@ class Service(Base):
     user = relationship(User, back_populates="services")
 
     def __repr__(self):
-        return f"[Service_id: {Service.service_id}, Service_name: {Service.service_name},
-                Description: {Service.description}]"
+        return f"[Service_id: {self.service_id}, Service_name: {self.service_name},\
+                 Description: {self.description}]"
 
 
 

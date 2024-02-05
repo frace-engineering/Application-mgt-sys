@@ -3,10 +3,8 @@
 from os import getenv
 from sqlalchemy import Column, String, Integer, create_engine
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.orm.declarative import declarative_base
-from clients import Client
+from sqlalchemy.ext.declarative import declarative_base
 from services import Service
-
 """ Create an instance of the declarative_base class and call it 'Base'"""
 Base = declarative_base()
 
@@ -22,22 +20,15 @@ class User(Base):
     email = Column(String(128), nullable=False)
 
     """ Establish a bidrectional relationships between the users table and both clients and services tables """
-    client = relationship(Client, back_populates="users")
-    service = relationship(Service, back_populates="users", cascade="All, delete-orphan")
+    #client = relationship(Client, back_populates="users")
+    service = relationship(Service, back_populates="users", cascade="all, delete-orphan")
 
-    def __repr__(self):
-        return f"[User_id: {self.user_id}, Business_name: {self.business_name}],"\
-               f"[Business_address = {self.business_address}, Phone_number: {self.phone_number}],"\
-                   f"[ E-mail: {self.email}]"
-
-    def show_service(self):
-        """ Return the services available """
-        pass
-
-
-
-
-
-
+    def __init__(self, business_name, business_address, phone_number, password, email):
+        super.__init__()
+        self.business_name = business_name
+        self.business_address = business_address
+        self.phone_number = phone_number
+        self.password = password
+        self.email = email
 
 
