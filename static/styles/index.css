@@ -1,8 +1,18 @@
 html {
-	background-color: #acacac;
+	background-color: #ffffff;
+
 }
 body {
-	margin: 20px auto;
+	margin-top: 20px;
 	background-color: #ffeffe;
-	color: blue;
+}
+nav {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	padding: 10px;
+	margin: 0px;
+}
+a {
+	text-decoration: none;
 }

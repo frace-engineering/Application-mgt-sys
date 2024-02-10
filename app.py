@@ -13,7 +13,7 @@ app.config['SECRETE_KEY'] = '16b0c77ece0958b3a5914bc951c1961e106ecbb511141f10515
 def this_status():
     return jsonify({"status": "Ok"})
 
-@app.route('/index', methods=['GET'], strict_slashes=False)
+@app.route('/appoms', methods=['GET'], strict_slashes=False)
 def index():
     return render_template('index.html') 
 
