@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width initial-scal=1">
+        <link rel="stylesheet" href="styles/index.css">
+        <title>{% block title %} {% endblock %} -Appoms</title>
+    </head>
+    <body>
+	    <nav>
+		    <a href="{{ url_for('about') }}">About</a>
+	     <a href="{{ url_for('contacts') }}">Contact us</a>
+	     <a href="{{ url_for('sign_up') }}">Sign Up</a>
+	     <a href="{{ url_for('services') }}">Our Services</a>
+	     <a href="{{ url_for('providers') }}">Providers</a>
+	 </nav>
+	 <hr>
+	 <div class="content">
+		 {% block content %} {% endblock %}
+	 </div>
+	 <footer class="footer">
+	    <h4> Powered by frace engineering coy </h4>
+	 </footer>
+    </body>
+</html>

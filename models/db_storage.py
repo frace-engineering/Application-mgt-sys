@@ -1,69 +1,61 @@
 #!/usr/bin/python3
-import datetime
 from os import getenv
 import sqlalchemy
+from models.base_models import Provider, Client, Service, Appointment, Session
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.ext.declarative import declarative_base
-from service_provider import Provider 
-from services import Service
-from appointments import Appointment
-from clients import Client
-
-
-Base = declarative_base()
-
-
+from sqlalchemy.orm import declarative_base
+"""
 classes = {
-        "Provider": Provider, 
+        "User": User,
         "Service": Service,
         "Client": Client,
         "Appointment": Appointment
         }
-
-APPOMS_MYSQL_USER = getenv("APPOMS_MYSQL_USER")
-APPOMS_MYSQL_HOST = getenv("APPOMS_MYSQL_HOST")
-APPOMS_MYSQL_PWD = getenv("APPOMS_MYSQL_PWD")
-APPOMS_MYSQL_DB = getenv("APPOMS_MYSQL_DB")
-if not all([APPOMS_MYSQL_USER, APPOMS_MYSQL_PWD, APPOMS_MYSQL_HOST, APPOMS_MYSQL_DB]):
-     raise ValueError("Please set all required environment variables.")
-db_url = f"mysql+mysqldb://{APPOMS_MYSQL_USER}:{APPOMS_MYSQL_PWD}@{APPOMS_MYSQL_HOST}/{APPOMS_MYSQL_DB}"
-engine = create_engine(db_url)
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-
-
+"""
 
 class DBStorage:
-    def create_provider(self, provider_name, provider_address, phone_number, password, email):
+    """Define the DBStorage class"""
+
+    def all(self, cls=None):
+        """Public method that returns dictionary of objects"""
         with Session() as session:
-            new_provider = Provider(provider_name=provider_name, provider_address=provider_address, phone_number=phone_number, password=password, email=email)
-            session.add(new_provider)
+            objects_dict = {}
+            if cls:
+                objects = session.query(cls).all()
+            else:
+                classes = [Provider, Client, Service, Appointment]
+                objects = []
+                for c in classes:
+                    objects.extend(session.query(c).all())
+                    for objs in objects:
+                        key = "{}.{}".format(type(objs).__name__, objs.id)
+                        objects_dict[key] = objs
+                    return objects_dict
+
+    def new(self, obj):
+        """Add the session to the object """
+        with Session() as session:
+            session.add(obj)
+
+    def save(self):
+        """Commit all changes to the current database """
+        with Session() as session:
             session.commit()
 
-    def create_client(self, user_name, first_name, last_name, phone_number, password, email):
+    def delete(self, obj=None):
+        """Delete obj if exists"""
         with Session() as session:
-            new_client = Client(user_name=user_name, first_name=first_name, last_name=last_name, phone_number=phone_number,\
-                            password=password, email=email)
-            session.add(new_client)
-            session.commit()
+            if obj:
+                session.delete(obj)
 
-    def create_service(self, service_name, description):
-        with Session() as session:
-            new_service = Service(service_name=service_name, description=description)
-            session.add(new_service)
-            session.commit()
+    def reload(self):
+        """Reload the session """
+        Base.metadata.create_all(self.engine)
+        Session = scoped_session(sessionmaker(bind=self.engine,
+                                 expire_on_commit=False))
+        self.session = Session()
 
-    def create_appointment(self, service_name, date_time, location="", description=""):
-        with Session() as session:
-            new_appointment = Appointment(service_name=service_name, date_time=datetime.datetime.utcnow(), location=location, description=description)
-            session.add(new_appointment)
-            session.commit()
-
-    def show_all(self, class_name):
-        with Session() as session:
-            if class_name not in classes:
-                raise ValueError(f"Invalid class name: {class_name}")
-            name = classes.get(class_name)
-            instances = session.query(name).all()
-            return instances
+    def close(self):
+        """ Call remove() on the __session """
+        self.session.remove()
