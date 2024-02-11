@@ -17,8 +17,28 @@ def this_status():
 def index():
     return render_template('index.html') 
 
-@app.route('/appoms/signup', methods=['GET'], strict_slashes=False)
+@app.route('/appoms/signup', methods=['GET', 'POST'], strict_slashes=False)
 def sign_up():
+    if request.method == 'POST':
+        username = request.form['username']
+        fname = request.form['fname']
+        lname = request.form['lname']
+        phone_number = request.form['phone_number']
+        password = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm-password']
+        if not (username and fname and lname and email and password and confirm_password):
+            return render_template('sign_up.html', error='All fields are required.')
+        if password != confirm_password:
+            return render_template('sign_up.html', error='Password does not match.')
+        with DB.session as session:
+            exiting_user = session.query(Client).filter_by(username=username).first()
+            if existing_user:
+                return render_template('sign_up.html', error='Username already exists.')
+            new_user = Client(username=username, fname=fname, lname=lname, phone_number=phone_number, email=email, password=password)
+            session.add(new_client)
+            session.commit()
+            return redirect(url_for('success', username=username))
     return render_template('sign_up.html') 
 
 @app.route('/appoms/contacts', methods=['GET'], strict_slashes=False)
