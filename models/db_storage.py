@@ -5,14 +5,6 @@ from models.base_models import Provider, Client, Service, Appointment, Session
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.orm import declarative_base
-"""
-classes = {
-        "User": User,
-        "Service": Service,
-        "Client": Client,
-        "Appointment": Appointment
-        }
-"""
 
 class DBStorage:
     """Define the DBStorage class"""

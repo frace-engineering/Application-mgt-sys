@@ -1,28 +1,12 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="/appoms/signup" method="post">
-	<label for="username">Username:</label>
-	<input type="text" id="username" name="username" required>
-	<br>
-	<label for="fname">First name:</label>
-	<input type="text" id="fname" name="fname" required>
-	<br>
-	<label for="lname">Last name:</label>
-	<input type="text" id="lname" name="lname" required>
-	<br>
-	<label for="email">E-mail:</label>
-	<input type="email" id="email" name="email" required>
-	<br>
-	<label for="password">Password:</label>
-	<input type="password" id="password" name="password" required>
-	<br>
-	<label for="confirm-password">Confirm password:</label>
-	<input type="pasword" id="confirm-password" name="confirm-password" required>
-	<br>
-	<input type="submit" value="Submit">
-</form>
+<h3>Hello! welcome to Appoms. Your one spot booking site.</h3>
 
+<div class="success">
+	<h4>Are you a service provider?</h4>
+	<a href="{{ url_for('provider_signup') }}">Click here</a>
+	<h4>Are you looking for services?</h4>
+	<a href="{{ url_for('client_signup') }}">Click here</a>
+</div>
 {% endblock %}
-

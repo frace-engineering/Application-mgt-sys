@@ -12,12 +12,15 @@ Base = declarative_base()
 class Provider(Base):
     __tablename__="providers"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    provider_name = Column(String(128), nullable=False)
-    provider_address = Column(String(200), nullable=False)
-    phone_number = Column(String(15), nullable=False)
-    password = Column(String(20), nullable=False)
+    username = Column(String(123), nullable=False)
+    provider_name = Column(String(128))
+    provider_address = Column(String(200))
     email = Column(String(128), nullable=False)
+    password = Column(String(20), nullable=False)
+    phone_number = Column(String(15), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
+    users = relationship("User", back_populates="providers")
     appointments = relationship("Appointment", back_populates="providers", cascade="all, delete-orphan")
     clients = relationship("Client", back_populates="providers", cascade="all, delete-orphan")
 
@@ -33,14 +36,16 @@ class Provider(Base):
 class Client(Base):
     __tablename__ = "clients"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    user_name = Column(String(123), nullable=False, unique=True)
-    first_name = Column(String(128), nullable=False)
-    last_name = Column(String(128), nullable=False)
-    phone_number = Column(String(15), nullable=False)
-    password = Column(String(100), nullable=False)
+    username = Column(String(123), nullable=False)
+    first_name = Column(String(128))
+    last_name = Column(String(128))
     email = Column(String(255), nullable=False)
+    password = Column(String(100), nullable=False)
+    phone_number = Column(String(15), nullable=False)
     provider_id = Column(Integer, ForeignKey("providers.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
 
+    users = relationship("User", back_populates="clients")
     appointments = relationship("Appointment", back_populates="clients", cascade="all, delete-orphan")
     providers = relationship("Provider", back_populates="clients")
 
@@ -57,8 +62,8 @@ class Client(Base):
 class Service(Base):
     __tablename__ = "services"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    service_name = Column(String(228), nullable=False)
-    description = Column(String(500), nullable=False)
+    service_name = Column(String(228))
+    description = Column(String(500))
     appointments = relationship("Appointment", back_populates='services')
 
     def __repr__(self):
@@ -72,7 +77,7 @@ class Service(Base):
 class Appointment(Base):
     __tablename__ = "appointments"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    service_name = Column(String(158), nullable=False)
+    service_name = Column(String(158))
     date_time = Column(DateTime, nullable=False)
     description = Column(String(300))
     location = Column(String(128))
@@ -90,6 +95,24 @@ class Appointment(Base):
                 self.date_time,
                 self.description,
                 self.location
+                )
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String(128), nullable=False)
+    email = Column(String(255), nullable=False)
+    password = Column(String(128), nullable=False)
+    phone_number = Column(String(20), nullable=False)
+
+    providers = relationship("Provider", back_populates="users", cascade="all, delete-orphan")
+    clients = relationship("Client", back_populates="users", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"User(username='%s', email='%s', phone_number='%s')" % (
+                self.username,
+                self.email,
+                self.phone_number
                 )
 
 

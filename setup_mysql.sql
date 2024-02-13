@@ -2,27 +2,41 @@
 
 USE appo_mgt_sys;
 
+CREATE TABLE IF NOT EXISTS users (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+       	username VARCHAR(128) NOT NULL,
+       	email VARCHAR(255) NOT NULL,
+       	password VARCHAR(20) NOT NULL,
+       	phone_number VARCHAR(15) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS providers (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-       	provider_name VARCHAR(128) NOT NULL,
-       	provider_address VARCHAR(200) NOT NULL,
-       	phone_number VARCHAR(15) NOT NULL,
-	appointment VARCHAR(500), 
+	username VARCHAR(128) NOT NULL,
+       	provider_name VARCHAR(128),
+       	provider_address VARCHAR(200),
+       	email VARCHAR(255) NOT NULL,
        	password VARCHAR(20) NOT NULL,
-       	email VARCHAR(255) NOT NULL
+	appointment VARCHAR(500), 
+       	phone_number VARCHAR(15) NOT NULL,
+	user_id INT,
+	FOREIGN KEY(user_id) REFERENCES users(id)
+
 );
 
 
 CREATE TABLE IF NOT EXISTS clients (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	user_name VARCHAR(128) NOT NULL,
-       	first_name VARCHAR(228) NOT NULL,
-       	last_name VARCHAR(228) NOT NULL,
-       	phone_number VARCHAR(15) NOT NULL,
-	appointment VARCHAR(500), 
-       	password VARCHAR(20) NOT NULL,
+	username VARCHAR(128) NOT NULL,
+       	first_name VARCHAR(228),
+       	last_name VARCHAR(228),
        	email VARCHAR(255) NOT NULL,
+       	password VARCHAR(20) NOT NULL,
+	appointment VARCHAR(500), 
+       	phone_number VARCHAR(15) NOT NULL,
+	user_id INT,
 	provider_id INT,
+	FOREIGN KEY(user_id) REFERENCES users(id),
        	FOREIGN KEY(provider_id) REFERENCES providers(id)
 );
 
