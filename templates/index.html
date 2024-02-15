@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 {% block content %}
-	<h1>{% block title %} Appoms Home {% endblock %}</h1>
+<h4>{% block title %} Existing user! <a href="{{ url_for('login') }}">Sign in</a> {% endblock %}</h4>
 	<p>{{ db }}</p>
 {% endblock %}
 

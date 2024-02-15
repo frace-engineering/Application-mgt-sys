@@ -2,16 +2,15 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width initial-scal=1">
+        <meta name="viewport" content="width=device-width initial-scale=1.0">
         <link rel="stylesheet" href="../static/styles/index.css">
         <title>{% block title %} {% endblock %} -Appoms</title>
     </head>
     <body>
 	    <div id="nav-div">
+<h3>  APPOMS </h3>
+<p>Appointment Management System (APPOMS) is an application designed to help manage your daily tight schedule.</p>
 	    <nav>
-	<h4>Appoms</h4>
-		    <a href="{{ url_for('about') }}">Home</a>
-	     <a href="{{ url_for('contacts') }}">Contact us</a>
 	     <a href="{{ url_for('signUp') }}">Sign-up</a>
 	     <a href="{{ url_for('services') }}">Our Services</a>
 	 </nav>
@@ -20,6 +19,12 @@
 		 {% block content %} {% endblock %}
 	 </div>
 	 <footer class="footer">
+<ul style="list-style-type: none">
+	<h4>Contact Us</h4>
+	<li>Phone: +234 8073815678</li>
+	<li>E-mail: admin@appoms.frace.tch</li>
+	<li>Address: 234B Burlinard crescent test state</li>
+</ul>
 	    <p> Powered by frace engineering coy </p>
 	 </footer>
     </body>

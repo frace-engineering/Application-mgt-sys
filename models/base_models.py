@@ -4,11 +4,32 @@ from os import getenv
 from sqlalchemy import Column, String, Integer,DateTime, create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.orm import declarative_base
+from datetime import datetime
 
 """ Create an instance of the declarative_base class and call it 'Base'"""
 Base = declarative_base()
 
 """ Create a 'User' class to inherit from Base class """
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String(128), nullable=False)
+    email = Column(String(255), nullable=False)
+    password = Column(String(128), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    phone_number = Column(String(20), nullable=False)
+
+    providers = relationship("Provider", back_populates="users", cascade="all, delete-orphan")
+    clients = relationship("Client", back_populates="users", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"User(username='%s', email='%s', phone_number='%s')" % (
+                self.username,
+                self.email,
+                self.phone_number
+                )
+
+
 class Provider(Base):
     __tablename__="providers"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
@@ -23,6 +44,7 @@ class Provider(Base):
     users = relationship("User", back_populates="providers")
     appointments = relationship("Appointment", back_populates="providers", cascade="all, delete-orphan")
     clients = relationship("Client", back_populates="providers", cascade="all, delete-orphan")
+    services = relationship("Service", back_populates="providers", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Provider(provider_name='%s', provider_address='%s', phone_number='%s', email='%s')>" % (
@@ -64,7 +86,9 @@ class Service(Base):
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     service_name = Column(String(228))
     description = Column(String(500))
+    provider_id = Column(Integer, ForeignKey("providers.id"))
     appointments = relationship("Appointment", back_populates='services')
+    providers = relationship("Provider", back_populates="services")
 
     def __repr__(self):
         return f"<Service(service_name='%s', description='%s', appointments='%s')>" % (
@@ -95,24 +119,6 @@ class Appointment(Base):
                 self.date_time,
                 self.description,
                 self.location
-                )
-
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String(128), nullable=False)
-    email = Column(String(255), nullable=False)
-    password = Column(String(128), nullable=False)
-    phone_number = Column(String(20), nullable=False)
-
-    providers = relationship("Provider", back_populates="users", cascade="all, delete-orphan")
-    clients = relationship("Client", back_populates="users", cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return f"User(username='%s', email='%s', phone_number='%s')" % (
-                self.username,
-                self.email,
-                self.phone_number
                 )
 
 
