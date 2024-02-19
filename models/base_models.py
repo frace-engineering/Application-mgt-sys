@@ -21,9 +21,30 @@ class User(Base):
 
     providers = relationship("Provider", back_populates="users", cascade="all, delete-orphan")
     clients = relationship("Client", back_populates="users", cascade="all, delete-orphan")
+    admin = relationship('Admin', back_populates='users', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"User(username='%s', email='%s', phone_number='%s')" % (
+                self.username,
+                self.email,
+                self.phone_number
+                )
+
+""" Create a 'Admin' class to inherit from Base class """
+class Admin(Base):
+    __tablename__ = "admin"
+    id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String(128), nullable=False)
+    email = Column(String(255), nullable=False)
+    password = Column(String(128), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    phone_number = Column(String(20), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    users = relationship('User', back_populates='admin')
+
+    def __repr__(self):
+        return f"Admin(username='%s', email='%s', phone_number='%s')" % (
                 self.username,
                 self.email,
                 self.phone_number

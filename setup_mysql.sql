@@ -11,6 +11,15 @@ CREATE TABLE IF NOT EXISTS users (
        	phone_number VARCHAR(15) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS  admin (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+       	username VARCHAR(128) NOT NULL,
+       	email VARCHAR(255) NOT NULL,
+       	password VARCHAR(255) NOT NULL,
+	created_at DATETIME NOT NULL,
+       	phone_number VARCHAR(15) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS providers (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(128) NOT NULL,
