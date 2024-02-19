@@ -152,7 +152,7 @@ def user():
             clientUser = db_session.query(Client).filter_by(username=username).first()
             if clientUser:
             #this_user = session.query(User).filter_by(user=user).first()
-                userName = clientUuser.username
+                userName = clientUser.username
                 userId = clientUser.id
                 firstName = clientUser.first_name
                 lastName = clientUser.last_name
