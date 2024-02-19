@@ -98,7 +98,7 @@ def create_service():
             new_service = Service(service_name=service_name, description=description)
             session.add(new_service)
             session.commit()
-            return render_template('/dashboard/services/index.html')
+            return redirect(url_for('services'))
     return render_template('/dashboard/services/new.html')
 
 @app.route('/dashboard/services', methods=['GET'], strict_slashes=False)
