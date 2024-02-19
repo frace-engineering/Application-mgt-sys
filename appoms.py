@@ -123,7 +123,7 @@ def login():
                 flash("Error! User does not exist", "info")
                 return redirect(url_for('login'))
             if  password == current_user.password:
-                if isinstance(username, Admin):
+                if current_user.username == 'admin':
                     return redirect(url_for('dashboard'))
                 else:
                     return redirect(url_for('user', user=user))
