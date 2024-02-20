@@ -23,6 +23,27 @@
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
               <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">client_id</th>
+                <th scope="col">client_name</th>
+                <th scope="col">client_email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+                <tr>
+			<th scope="row">{{ client.id }}</th>
+			<td><a href="{{ url_for('user') }}">{{ client.username }}</a></td>
+                    <td>{{ client.email }}</td>
+                </tr>
+            {% endfor %}
+    <div style="text-align:right">
+        <button type="button" class="btn btn-primary">
+		<a style="color:white;" href="{{ url_for('create_service') }}">New service</a>
+        </button>
+    </div>
           </div>
     </div>
 </body>

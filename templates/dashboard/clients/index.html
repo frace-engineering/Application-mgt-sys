@@ -16,13 +16,29 @@
               <h5 class="card-title">{{ userName }}</h5>
               <p>User Id: {{ userId }}</p>
               <p>User name: {{ userName }}</p>
-              <p>Company name: {{ providerNmae }}</p>
-              <p>Address: {{ providerAddr }}</p>
+              <p>First name: {{ firstName }}</p>
+              <p>Last name: {{ lastName }}</p>
               <p>Phone: {{ phoneNumber }}</p>
               <p>Email: {{ Email }}</p>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
               <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">provider_id</th>
+                <th scope="col">provider_name</th>
+                <th scope="col">provider_email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for provider in providers %}
+                <tr>
+			<th scope="row">{{ provider.id }}</th>
+			<td><a href="{{ url_for('user') }}">{{ provider.username }}</a></td>
+                    <td>{{ provider.email }}</td>
+                </tr>
+            {% endfor %}
           </div>
     </div>
 </body>

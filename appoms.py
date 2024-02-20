@@ -135,7 +135,7 @@ def login():
 @app.route('/dashboard/user', methods=['GET'], strict_slashes=False)
 def user():
     if 'username' in session:
-        username = session['username'] or request.args.get('username')
+        username = session['username']
         email = session['email']
         with Session() as db_session:
             providerUser = db_session.query(Provider).filter_by(username=username).first()
@@ -147,7 +147,8 @@ def user():
                 providerAddr = providerUser.provider_address
                 phoneNumber = providerUser.phone_number
                 email = providerUser.email
-                return render_template('/dashboard/providers/index.html', userName=userName, userId=userId,
+                clients = db_session.query(Client).filter_by(provider_id=userId).all()
+                return render_template('/dashboard/providers/index.html', clients=clients, userName=userName, userId=userId,
                     providerName=providerName, providerAddr=providerAddr, email=email, phoneNumber=phoneNumber)
             clientUser = db_session.query(Client).filter_by(username=username).first()
             if clientUser:
@@ -158,7 +159,9 @@ def user():
                 lastName = clientUser.last_name
                 phoneNumber = clientUser.phone_number
                 email = clientUser.email
-                return render_template('/dashboard/clients/index.html', userName=userName, userId=userId,
+                providers = db_session.query(Provider).all()
+                return render_template('/dashboard/clients/index.html', providers=providers,
+                        userName=userName, userId=userId,
                     firstName=firstName, lastName=lastName, phoneNumber=phoneNumber)
             return f"Not found {user}"
 
