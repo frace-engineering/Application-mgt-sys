@@ -8,58 +8,25 @@
         <title>{% block title %} {% endblock %} -Appoms</title>
     </head>
     <body>
+		    {% block head %} {% endblock %}
+	    <div style="display: flex; justify-content:space-between;">
+	<h3>  APPOMS </h3>
+                <p style="padding-right:450px;">Let us manage your daily tight schedule.</p>
+	    </div>
+	</div>
 	    <div id="nav-div" style="width:100%; height:40vh; background-image:url('../static/images/service.png'); background-repeat:no-repeat; background-size: cover;">
 	    <nav>
 	     <a href="{{ url_for('signUp') }}">Sign-up</a>
-	     <a href="{{ url_for('services') }}">Our Services</a>
+	     <a href="{{ url_for('login') }}">Login</a>
+	     <a href="{{ url_for('our_services') }}">Our Services</a>
 	 </nav>
 	    </div>
-	<section style="disply:flex;">
-	<div style="text-align:center; color:blue;">
  	
          <div class="content">
-	<h3>  APPOMS </h3>
-                <p>Appointment Management System (APPOMS) is an application designed to help manage your daily tight schedule.</p>
-	</div>
 	 		 {% block content %} {% endblock %}
 	 </div>
 
 	 
-	 <div>
-		 <h3>Our Services</h3>
-<h4>Appointment Scheduling:</h4>
-<ul>
-	<li>Allow users to schedule appointments with service providers (doctors, consultants, etc.) based on their availability.</li>
-	<li>Provide a user-friendly interface for selecting preferred time slots.</li>
-</ul>
-<br>
-<h4>User Registration and Authentication:</h4>
-
-<ul><li>Allow users to create accounts and authenticate themselves.</li>
-	<li>Secure login mechanisms to protect user data.</li>
-</ul>
-<br>
-<h4>Provider Management:</h4>
-<ul><li>Enable service providers to manage their availability, set working hours, and define appointment durations.</li>
-	<li>Allow providers to update their profiles with relevant information.</li>
-</ul>
-<br>
-<h4>Client Management:</h4>
-
-<ul><li>Maintain a database of client information, including contact details and appointment history.</li>
-	<li>Enable clients to view and manage their appointments.</li>
-</ul>
-<br>
-<h4>Automated Notifications:</h4>
-
-<ul><li>Send automated reminders to clients and providers about upcoming appointments.</li>
-	<li>Notify users of any changes or cancellations in their scheduled appointments.</li></ul><br>
-<h4>Calendar Integration:</h4>
-
-<ul><li>Integrate with calendars (Google Calendar, Outlook, etc.)</li></ul>
-
-	 </div>
-	 </section>
 	 <footer class="footer">
 <ul style="list-style-type: none">
 	<h4>Contact Us</h4>

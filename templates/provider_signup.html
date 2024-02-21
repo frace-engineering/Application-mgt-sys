@@ -1,6 +1,8 @@
 
 {% extends 'base.html' %}
-
+{% block head %}
+<p><i>Please fill in your details in the below form.</i></p>
+{% endblock %}
 {% block content %}
 {% if error %}
 <h4>{{ error }}. Please go back and try another username</h4>

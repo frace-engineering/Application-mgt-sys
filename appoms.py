@@ -107,9 +107,9 @@ def client_signup():
 def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
-        username = session['username']
         password = request.form['password']
         with Session() as db_session:
+            username = session['username']
             current_user = db_session.query(User).filter_by(username=username).first()
             if not current_user:
                 flash("Error! User does not exist", "info")
@@ -190,6 +190,10 @@ def users():
     with Session() as db_session:
         users = db_session.query(User).all()
     return render_template('/dashboard/users/index.html', users=users)
+
+@app.route('/our_services', methods=['GET'], strict_slashes=False)
+def our_services():
+    return render_template('our_services.html')
 
 
 
