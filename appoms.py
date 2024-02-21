@@ -48,18 +48,14 @@ def creat_admin():
 def provider_signup():
     if request.method == 'POST':
         session['username'] = request.form['username']
-        session['provider_name'] = request.form['business-name']
-        session['provider_address'] = request.form['business-address']
-        session['email'] = request.form['email']
+        provider_name = request.form['business-name']
+        provider_address = request.form['business-address']
+        email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm-password']
-        session['phone_number'] = request.form['phone-number']
+        phone_number = request.form['phone-number']
 
         username = session['username']
-        provider_name = session['provider_name']
-        provider_address = session['provider_address']
-        email = session['email']
-        phone_number = session['phone_nunber']
         if confirm_password != password:
             flash("Pasword does not match", "info")
             return render_template('provider_signup.html')
@@ -83,18 +79,14 @@ def provider_signup():
 def client_signup():
     if request.method == 'POST':
         session['username'] = request.form['username']
-        session['first_name'] = request.form['first-name']
-        session['last_name'] = request.form['last-name']
-        session['email'] = request.form['email']
+        first_name = request.form['first-name']
+        last_name = request.form['last-name']
+        email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm-password']
-        session['phone_number'] = request.form['phone-number']
+        phone_number = request.form['phone-number']
 
         username = session['username']
-        first_name = session['first_name']
-        last_name = session['last_name']
-        email = session['email']
-        phone_number = session['phone_number']
         if confirm_password != password:
             flash("Error! Password does not match.", "info")
             return remder_template('client_signup.html')
@@ -136,7 +128,6 @@ def login():
 def user():
     if 'username' in session:
         username = session['username']
-        email = session['email']
         with Session() as db_session:
             providerUser = db_session.query(Provider).filter_by(username=username).first()
             if providerUser:
