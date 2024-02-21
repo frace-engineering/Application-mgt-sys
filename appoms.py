@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Import all the packages required"""
 from datetime import datetime
 import uuid
 from models.db_storage import DBStorage as DB
@@ -9,19 +10,23 @@ from models.base_models import Provider, Appointment, Service, Client, User, Adm
 from flask import abort
 
 app = Flask(__name__)
+"""Config the secret key for browser session """
 app.config['SECRET_KEY'] = '16b0c77ece0958b3a5914bc951c1961e106ecbb511141f10515dee07b5e4453113c9'
 
 
+"""The landing page route of appoms"""
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     return render_template('index.html') 
 
 @app.route('/signUp', methods=['GET', 'POST'], strict_slashes=False)
 def signUp():
+    """Render the sign uo page"""
     return render_template('sign_up.html')
 
 @app.route('/dashboard/admin', methods=['GET', 'POST'], strict_slashes=False)
 def creat_admin():
+    """This code block will be used to bt existing admin to add another admin"""
     if request.method == 'POST':
         session['username'] = request.form['username']
         email = request.form['email']
@@ -46,6 +51,7 @@ def creat_admin():
 
 @app.route('/appoms/provider_signup', methods=['GET', 'POST'], strict_slashes=False)
 def provider_signup():
+    """Method to sign up and authenticate a service provider"""
     if request.method == 'POST':
         session['username'] = request.form['username']
         provider_name = request.form['business-name']
@@ -77,6 +83,7 @@ def provider_signup():
 
 @app.route('/appoms/client_signup', methods=['GET', 'POST'], strict_slashes=False)
 def client_signup():
+    """Method to sign uo and authenticate a client"""
     if request.method == 'POST':
         session['username'] = request.form['username']
         first_name = request.form['first-name']
@@ -105,6 +112,7 @@ def client_signup():
 
 @app.route('/user_login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
+    """Existing user login method"""
     if request.method == 'POST':
         session['username'] = request.form['username']
         password = request.form['password']
@@ -126,6 +134,7 @@ def login():
 
 @app.route('/dashboard/user', methods=['GET'], strict_slashes=False)
 def user():
+    """Users dashboard"""
     if 'username' in session:
         username = session['username']
         with Session() as db_session:
