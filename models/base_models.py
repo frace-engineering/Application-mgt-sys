@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ Include the necessary packages for the script """
 from os import getenv
-from sqlalchemy import Column, String, Integer,DateTime, create_engine, ForeignKey
+from sqlalchemy import Column, String, Integer,DateTime, create_engine, ForeignKey, Time, Enum
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
@@ -66,6 +66,7 @@ class Provider(Base):
     appointments = relationship("Appointment", back_populates="providers", cascade="all, delete-orphan")
     clients = relationship("Client", back_populates="providers", cascade="all, delete-orphan")
     services = relationship("Service", back_populates="providers", cascade="all, delete-orphan")
+    booked_slots = relationship('Slot', back_populates="providers")
 
     def __repr__(self):
         return f"<Provider(provider_name='%s', provider_address='%s', phone_number='%s', email='%s')>" % (
@@ -91,6 +92,7 @@ class Client(Base):
     users = relationship("User", back_populates="clients")
     appointments = relationship("Appointment", back_populates="clients", cascade="all, delete-orphan")
     providers = relationship("Provider", back_populates="clients")
+    booked_slots = relationship('Slot', back_populates="clients")
 
     def __repr__(self):
         return f"<Client(user_name='%s', first_name='%s', last_name='%s' phone_number='%s', email='%s')>" % (
@@ -123,9 +125,11 @@ class Appointment(Base):
     __tablename__ = "appointments"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     service_name = Column(String(158))
-    date_time = Column(DateTime, nullable=False)
-    description = Column(String(300))
-    location = Column(String(128))
+    week_day = Column(Enum('Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'))
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
+    description = Column(String(300), default="")
+    location = Column(String(128), default="")
     provider_id = Column(Integer, ForeignKey("providers.id"))
     client_id = Column(Integer, ForeignKey("clients.id"))
     service_id = Column(Integer, ForeignKey("services.id"))
@@ -133,15 +137,31 @@ class Appointment(Base):
     providers = relationship("Provider", back_populates="appointments")
     clients = relationship("Client", back_populates="appointments")
     services = relationship("Service", back_populates="appointments")
+    booked_slots = relationship('Slot', back_populates="appointments")
 
     def __repr__(self):
         return f"<Appointment(service_name='%s', date_time='%s', description='%s', location='%s')>" % (
                 self.service_name,
-                self.date_time,
+                self.week_day,
                 self.description,
                 self.location
                 )
 
+class Slot(Base):
+    __tablename__ = "booked_slots"
+    id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
+    service_name = Column(String(228))
+    week_day = Column(Enum('Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'))
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
+    client_id = Column(Integer, ForeignKey('clients.id'))
+    appointment_id = Column(Integer, ForeignKey('appointments.id'))
+    provider_id = Column(Integer, ForeignKey('providers.id'))
+
+    clients = relationship('Client', back_populates="booked_slots")
+    appointments = relationship('Appointment', back_populates="booked_slots")
+    providers = relationship('Provider', back_populates="booked_slots")
+#Provider.appointments = relationship('Appointment', back_populates="providers")
 
 APPOMS_MYSQL_USER = getenv("APPOMS_MYSQL_USER")
 APPOMS_MYSQL_HOST = getenv("APPOMS_MYSQL_HOST")

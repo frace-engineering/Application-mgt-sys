@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<tbody class="table-group-divider">
+     {% for slot in slots %}
+              <tr>
+              <th scope="row">{{ slot.week_day }}</th>
+              <td style="cursor: pointer">{{ slot.start_time }}</td
+              <td>{{ slot.end_time }}</td
+              <td>{{ slot.id }}</td>
+              <td>{{ slot.provider_id }}</td>
+              <td></td>
+             </tr>
+																	                   {% endfor %}		
+</tbody>
+{% endblock %}

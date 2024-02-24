@@ -19,9 +19,9 @@
               <p>First name: {{ firstName }}</p>
               <p>Last name: {{ lastName }}</p>
               <p>Phone: {{ phoneNumber }}</p>
-              <p>Email: {{ Email }}</p>
+              <p>Email: {{ email }}</p>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+	      <a href="(( url_for('bookApppointment') }}" class="btn btn-primary">Book Appointment</a>
             </div>
     <table class="table">
         <thead>
@@ -35,7 +35,7 @@
             {% for provider in providers %}
                 <tr>
 			<th scope="row">{{ provider.id }}</th>
-			<td><a href="{{ url_for('user') }}">{{ provider.username }}</a></td>
+			<td><a href="{{ url_for('book_slot') }}">{{ provider.username }}</a></td>
                     <td>{{ provider.email }}</td>
                 </tr>
             {% endfor %}

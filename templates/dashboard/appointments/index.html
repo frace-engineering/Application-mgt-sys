@@ -17,9 +17,10 @@
 
     <div style="text-align:right">
         <button type="button" class="btn btn-primary">
-		<a style="color:white;" href="{{ url_for('create_appointment') }}">New appointment</a>
+		<a style="color:white;" href="{{ url_for('appointments') }}">Appointments</a>
         </button>
     </div>
+    <div>{% block content %} {% endblock %}</div>
 
     <div stle="width:700px;">
         <table class="table">
@@ -27,12 +28,14 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">provider_id</th>
+                <th scope="col">client_id</th>
                 <th scope="col">service_id</th>
-                <th scope="col">DateTime</th>
+                <th scope="col">Day</th>
+                <th scope="col">Time</th>
               </tr>
             </thead>
             <tbody class="table-group-divider">
-              {% for service in appointments %}
+              {% for slots in appointments %}
 
                 <tr>
 			<th scope="row">{{ appointment.id }}</th>
