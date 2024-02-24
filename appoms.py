@@ -34,6 +34,8 @@ def creat_admin():
         confirm_password = request.form['confirm-password']
         phone_number = request.form['phone-number']
         username = session['username']
+        if password != confirm_password:
+            return render_template('admin.html', error="Mismatched password")
         with Session() as db_session:
             existing_users = db_session.query(Admin).filter_by(username=username).first()
             if existing_users:
@@ -41,11 +43,11 @@ def creat_admin():
             new_user = User(username=username, email=email, password=password,
                         created_at=datetime.utcnow(), phone_number=phone_number)
             new_admin = Admin(username=username, email=email, password=password,
-                        created_at=datetime.utcnow(), phone_number=phone_number)
+                        created_at=datetime.utcnow(), phone_number=phone_number, user_id=new_user.id)
             db_session.add(new_admin)
             db_session.add(new_user)
             db_session.commit()
-            return redirect(url_for('dashboard', user_id=new_user.id))
+            return redirect(url_for('dashboard', username=username))
     return render_template('/dashboard/admin.html')
 
 @app.route('/provider_signup', methods=['GET', 'POST'], strict_slashes=False)
@@ -72,11 +74,11 @@ def provider_signup():
                         created_at=datetime.utcnow(), phone_number=phone_number)
             new_provider = Provider(username=username, provider_name=provider_name,
                             provider_address=provider_address, email=email, password=password,
-                            phone_number=phone_number, users=new_user)
+                            phone_number=phone_number, user_id=new_user.id)
             db_session.add(new_provider)
             db_session.add(new_user)
             db_session.commit()
-            return redirect(url_for('user', user_id=new_user.username))
+            return redirect(url_for('user', username=username))
     return render_template('provider_signup.html') 
 
 @app.route('/client_signup', methods=['GET', 'POST'], strict_slashes=False)
@@ -101,11 +103,11 @@ def client_signup():
                 return render_template('client_signup.html', error="User alrady exist")
             new_user = User(username=username, email=email, password=password, phone_number=phone_number)
             new_client = Client(username=username, first_name=first_name, last_name=last_name, email=email,
-                            password=password, phone_number=phone_number, users=new_user)
+                            password=password, phone_number=phone_number, user_id=new_user.id)
             db_session.add(new_client)
             db_session.add(new_user)
             db_session.commit()
-            return redirect(url_for('user', user_id=new_user.username))
+            return redirect(url_for('user', username=username))
     return render_template('client_signup.html') 
 
 @app.route('/user_login', methods=['GET', 'POST'], strict_slashes=False)
@@ -124,7 +126,7 @@ def login():
                 if current_user.username == 'admin':
                     return redirect(url_for('dashboard'))
                 else:
-                    return redirect(url_for('user', user=user))
+                    return redirect(url_for('user', username=username))
             else:
                 flash("Error! User does not exist", "info")
                 return redirect(url_for('login'))
@@ -204,6 +206,7 @@ def our_services():
 @app.route('/slots', methods=['GET', 'POST'], strict_slashes=False)
 def createSlot():
     if request.method == 'POST':
+        provider_id = request.args.get('provider_id')
         week_day = request.form['week-day']
         start_time = request.form['start-time']
         end_time = request.form['end-time']
@@ -211,7 +214,7 @@ def createSlot():
             slots = db_session.query(Slot).filter_by(week_day=week_day, start_time=start_time).first()
             if slots:
                 return f"Slot already booked."
-            new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, provider_id=new_slot.provider_id)
+            new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, provider_id=provider_id)
             db_session.add(new_slot)
             db_session.commit()
             return render_template('/dashboard/appointments/index.html', provider_id=provider_id)
@@ -219,14 +222,26 @@ def createSlot():
 
 @app.route('/book_appointment', methods=['GET'], strict_slashes=False)
 def book_slot():
-    session['provider_id'] = request.args.get('provider_id')
-    username = session['provider_id']
+    id = request.args.get('id')
     with Session() as db_session:
-        slots = db_session.query(Slot).filter_by(provider_id=Slot.provider_id).all()
-        return render_template('/dashboard/appointments/available_slot.html', slots=slots, provider_id=slots.provider_id )
+        slot = db_session.query(Slot).filter_by(id=id).first()
+        existing_appointment = db_session.query(Appointment).filter_by(id=id).first()
+        if existing_appointment:
+            return f"Slot already taken. Book for another slot"
+        new_appointment = Appointment(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time)
+        db_session.add(new_appointment)
+        db_session.commit()
+        return render_template('/dashboard/appointments/index.html')
+
+@app.route('/availableSlots', methods=['GET'], strict_slashes=False)
+def slot():
+    provider_id = request.args.get('provider_id')
+    with Session() as db_session:
+        slots = db_session.query(Slot).all()
+    return render_template('/dashboard/appointments/index.html', slots=slots)
 
 @app.route('/appointments', methods=['GET'], strict_slashes=False)
-def appointments():
+def appointment():
     with Session() as db_session:
         appointments = db_session.query(Appointment).all()
     return render_template('/dashboard/appointments/index.html', appointments=appointments)

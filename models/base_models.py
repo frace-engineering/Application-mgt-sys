@@ -130,6 +130,7 @@ class Appointment(Base):
     end_time = Column(DateTime, nullable=False)
     description = Column(String(300), default="")
     location = Column(String(128), default="")
+    slot_id = Column(Integer, ForeignKey("booked_slots.id"))
     provider_id = Column(Integer, ForeignKey("providers.id"))
     client_id = Column(Integer, ForeignKey("clients.id"))
     service_id = Column(Integer, ForeignKey("services.id"))
@@ -155,12 +156,12 @@ class Slot(Base):
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     client_id = Column(Integer, ForeignKey('clients.id'))
-    appointment_id = Column(Integer, ForeignKey('appointments.id'))
     provider_id = Column(Integer, ForeignKey('providers.id'))
 
     clients = relationship('Client', back_populates="booked_slots")
-    appointments = relationship('Appointment', back_populates="booked_slots")
     providers = relationship('Provider', back_populates="booked_slots")
+    appointments = relationship('Appointment', back_populates="booked_slots")
+
 #Provider.appointments = relationship('Appointment', back_populates="providers")
 
 APPOMS_MYSQL_USER = getenv("APPOMS_MYSQL_USER")

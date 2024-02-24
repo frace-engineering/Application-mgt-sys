@@ -1,9 +1,37 @@
 {% extends 'index.html' %}
 
+
+    <div style="text-align:right">
+        <button type="button" class="btn btn-primary">
+		<a style="color:white;" href="{{ url_for('appointment') }}">Appointments</a>
+        </button>
+        <button type="button" class="btn btn-primary">
+		<a style="color:white;" href="{{ url_for('slot') }}">Slots</a>
+        </button>
+        <button type="button" class="btn btn-primary">
+		<a style="color:white;" href="{{ url_for('createSlot') }}">Create slot</a>
+        </button>
+    </div>
 {% block content %}
 
-<tbody class="table-group-divider">
+    <div stle="width:700px;">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">provider_id</th>
+                <th scope="col">client_id</th>
+                <th scope="col">service_id</th>
+                <th scope="col">Day</th>
+                <th scope="col">Time</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            </tbody>
+          </table>
+    </div>
      {% for slot in slots %}
+<tbody class="table-group-divider">
               <tr>
               <th scope="row">{{ slot.week_day }}</th>
               <td style="cursor: pointer">{{ slot.start_time }}</td
@@ -12,6 +40,6 @@
               <td>{{ slot.provider_id }}</td>
               <td></td>
              </tr>
-																	                   {% endfor %}		
 </tbody>
+	{% endfor %}		
 {% endblock %}
