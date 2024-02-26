@@ -236,11 +236,11 @@ def createSlot():
             slots = db_session.query(Slot).filter_by(week_day=week_day, start_time=start_time).first()
             if slots:
                 return f"Slot already booked."
-            new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, providers=current_user.id)
+            new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, provider_id=current_user.id)
             db_session.add(new_slot)
             db_session.commit()
-            return render_template('/dashboard/appointments/index.html', new_slot=current_user.id)
-    return render_template('/dashboard/appointments/slots.html', new_slot=current_user.id)
+            return render_template('/dashboard/appointments/index.html')
+    return render_template('/dashboard/appointments/slots.html', current_user=current_user)
 
 @app.route('/view_slots', methods=['GET'], strict_slashes=False)
 @login_required
