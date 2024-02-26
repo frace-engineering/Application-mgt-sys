@@ -1,0 +1,57 @@
+{% extends 'main.html' %}
+{% block content %}
+    <h2>Appointments</h2>
+
+    <div style="text-align:right">
+        <button type="button" class="btn btn-primary">
+		<a  href="{{ url_for('appointment') }}">Appointments</a>
+        </button>
+        <button type="button" class="btn btn-primary">
+		<a  href="{{ url_for('slot', provider_id=provider_id) }}">Slots</a>
+        </button>
+    </div>
+
+    <div stle="width:700px;">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Week day</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">provider_id</th>
+                <th scope="col">client_id</th>
+                <th scope="col">service_id</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+		    {% for slot in slots %}
+              <tr>
+		      <td><a href="{{ url_for('book_slot', id=slot.id) }}">{{ slot.id }}</a></td>
+              <th scope="row">{{ slot.week_day }}</th>
+	      <td style="cursor: pointer">{{ slot.start_time }}</td>
+	      <td>{{ slot.end_time }}</td>
+              <td>{{ slot.provider_id }}</td>
+              <td>{{ slot.client_id }}</td>
+              <td>{{ slot.service_id }}</td>
+              <td></td>
+	      {% endfor %}
+             </tr>
+            </tbody>
+            <tbody class="table-group-divider">
+		    {% for appointment in appointments %}
+              <tr>
+		      <td>{{ appointment.id }}</a></td>
+              <th scope="row">{{ appointment.week_day }}</th>
+	      <td style="cursor: pointer">{{ appointment.start_time }}</td>
+	      <td>{{ appointment.end_time }}</td>
+              <td>{{ appointment.provider_id }}</td>
+              <td>{{ appointment.client_id }}</td>
+              <td>{{ appointment.service_id }}</td>
+              <td></td>
+	      {% endfor %}
+             </tr>
+            </tbody>
+          </table>
+    </div>
+    {% endblock %}

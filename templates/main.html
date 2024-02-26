@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flask Auth Example</title>
+    <link rel="icon" href="../static/images/frace-fblue.png" type="image/png">
+    <!--<link rel="stylesheet" href="../static/styles/index.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+</head>
+
+<body>
+    <section class="hero is-primary is-fullheight">
+
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div id="navbarMenuHeroA" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a href="{{ url_for('index') }}" class="navbar-item">
+                                Home
+                            </a>
+			    <a href="{{ url_for('contact') }}" class="navbar-item">
+                                Contact Us
+                            </a>
+                            <a href="{{ url_for('user') }}" class="navbar-item">
+                                Profile
+                            </a>
+                            <a href="{{ url_for('login') }}" class="navbar-item">
+                                Login
+                            </a>
+                            <a href="{{ url_for('client_signup') }}" class="navbar-item">
+                                Client Sign Up
+                            </a>
+                            <a href="{{ url_for('provider_signup') }}" class="navbar-item">
+                                Provider Sign Up
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="navbar-item">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="hero-body" style="width:100%; height:25vh; background-image:url('/images/service.png'); background-repeat:no-repeat; backgroud-size:80vww;">
+            <div class="container has-text-centered">
+               {% block content %}
+               {% endblock %}
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
