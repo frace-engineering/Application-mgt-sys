@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-
-</head>
-<body>
+	{% extends 'main.html' %}
+	{% block content %}
     <div>
-        <div class="card" style="width: 18rem;">
+        <div class="card" style="width: 80%; display:flex; flex-direction:row; justify-content:space-around;">
             <img src="..." class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">{{ userName }}</h5>
@@ -21,7 +12,7 @@
               <p>Phone: {{ phoneNumber }}</p>
               <p>Email: {{ email }}</p>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-	      <a href="{{ url_for('book_slot') }}" class="btn btn-primary">Book Appointment</a>
+	      <!-- <a href="{{ url_for('book_slot') }}" class="btn btn-primary">Book Appointment</a> -->
             </div>
     <table class="table">
         <thead>
@@ -35,11 +26,10 @@
             {% for provider in providers %}
                 <tr>
 			<th scope="row">{{ provider.id }}</th>
-			<td><a href="{{ url_for('book_slot', id=provider.username) }}">{{ provider.username }}</a></td>
+			<td><a href="{{ url_for('view_slot', id=current_user.id) }}">{{ provider.username }}</a></td>
                     <td>{{ provider.email }}</td>
                 </tr>
             {% endfor %}
           </div>
     </div>
-</body>
-</html>
+    {% endblock %}

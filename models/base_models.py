@@ -5,12 +5,13 @@ from sqlalchemy import Column, String, Integer,DateTime, create_engine, ForeignK
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
+from flask_login import UserMixin
 
 """ Create an instance of the declarative_base class and call it 'Base'"""
 Base = declarative_base()
 
 """ Create a 'User' class to inherit from Base class """
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String(128), nullable=False)
@@ -31,7 +32,7 @@ class User(Base):
                 )
 
 """ Create a 'Admin' class to inherit from Base class """
-class Admin(Base):
+class Admin(UserMixin, Base):
     __tablename__ = "admin"
     id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String(128), nullable=False)
@@ -51,7 +52,7 @@ class Admin(Base):
                 )
 
 
-class Provider(Base):
+class Provider(UserMixin, Base):
     __tablename__="providers"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     username = Column(String(123), nullable=False)
@@ -77,7 +78,7 @@ class Provider(Base):
                 )
 
 
-class Client(Base):
+class Client(UserMixin, Base):
     __tablename__ = "clients"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     username = Column(String(123), nullable=False)
@@ -168,6 +169,7 @@ APPOMS_MYSQL_USER = getenv("APPOMS_MYSQL_USER")
 APPOMS_MYSQL_HOST = getenv("APPOMS_MYSQL_HOST")
 APPOMS_MYSQL_PWD = getenv("APPOMS_MYSQL_PWD")
 APPOMS_MYSQL_DB = getenv("APPOMS_MYSQL_DB")
+APPOMS_KEY = getenv('APPOMS_KEY')
 if not all([APPOMS_MYSQL_USER, APPOMS_MYSQL_PWD, APPOMS_MYSQL_HOST, APPOMS_MYSQL_DB]):
      raise ValueError("Please set all required environment variables.")
 db_url = f"mysql+mysqldb://{APPOMS_MYSQL_USER}:{APPOMS_MYSQL_PWD}@{APPOMS_MYSQL_HOST}/{APPOMS_MYSQL_DB}"

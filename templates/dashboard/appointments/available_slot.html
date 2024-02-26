@@ -1,5 +1,6 @@
-{% extends 'index.html' %}
+{% extends '../main.html' %}
 
+{% block content %}
 
     <div style="text-align:right">
         <button type="button" class="btn btn-primary">
@@ -34,8 +35,8 @@
 <tbody class="table-group-divider">
               <tr>
               <th scope="row">{{ slot.week_day }}</th>
-              <td style="cursor: pointer">{{ slot.start_time }}</td
-              <td>{{ slot.end_time }}</td
+	      <td style="cursor: pointer">{{ slot.start_time }}</td>
+	      <td>{{ slot.end_time }}</td>
               <td>{{ slot.id }}</td>
               <td>{{ slot.provider_id }}</td>
               <td></td>

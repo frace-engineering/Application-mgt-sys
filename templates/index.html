@@ -1,5 +1,5 @@
 
-{% extends 'base.html' %}
+{% extends 'main.html' %}
 {% block content %}
 <h4>{% block title %} Existing user! <a href="{{ url_for('login') }}">Sign in</a> {% endblock %}</h4>
 	<p>{{ db }}</p>
