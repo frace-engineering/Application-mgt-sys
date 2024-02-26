@@ -26,7 +26,7 @@
             {% for provider in providers %}
                 <tr>
 			<th scope="row">{{ provider.id }}</th>
-			<td><a href="{{ url_for('view_slot', id=current_user.id) }}">{{ provider.username }}</a></td>
+			<td><a href="{{ url_for('view_slot', username=provider.username) }}">{{ provider.username }}</a></td>
                     <td>{{ provider.email }}</td>
                 </tr>
             {% endfor %}
