@@ -290,9 +290,10 @@ def slot():
 @app.route('/appointments', methods=['GET'], strict_slashes=False)
 @login_required
 def appointment():
+    provider_id = request.args.get('provider_id')
     slot_id = request.args.get('slot_id')
     with Session() as db_session:
-        appointments = db_session.query(Appointment).filter(or_(slot_id=slot_id, provider_id=provider_id).all()
+        appointments = db_session.query(Appointment).filter_by(slot_id=slot_id, provider_id=provider_id).all()
         if isinstance(current_user, Provider):
             return render_template('/dashboard/appointments/index.html', provider_id=current_user.id, appointments=appointments)
         return render_template('/dashboard/appointments/clients.html', client_id=current_user.id, appointments=appointments)
