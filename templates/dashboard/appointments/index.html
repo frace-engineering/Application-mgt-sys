@@ -4,13 +4,13 @@
 
     <div style="text-align:right">
         <button type="button" class="btn btn-primary">
-		<a  href="{{ url_for('appointment') }}">Appointments</a>
+		<a  href="{{ url_for('appointment', username=current_user.username) }}">Appointments</a>
         </button>
         <button type="button" class="btn btn-primary">
-		<a  href="{{ url_for('slot', provider_id=provider_id) }}">Slots</a>
+		<a  href="{{ url_for('slot', username=current_user.username) }}">Slots</a>
         </button>
         <button type="button" class="btn btn-primary">
-		<a  href="{{ url_for('createSlot', provider_id=current_user.id) }}">Create slot</a>
+		<a  href="{{ url_for('createSlot', username=current_user.username) }}">Create slot</a>
         </button>
     </div>
 

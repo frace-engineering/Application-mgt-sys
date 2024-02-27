@@ -204,6 +204,7 @@ def services():
     return render_template('/dashboard/services/index.html', services=services)
 
 @app.route('/dashboard', methods=['GET'], strict_slashes=False)
+@login_required
 def dashboard():
     with Session() as db_session:
         usersCount = db_session.query(User).count()
@@ -251,7 +252,7 @@ def createSlot():
 @app.route('/view_slots', methods=['GET'], strict_slashes=False)
 @login_required
 def view_slot():
-    user_id = request.args.get('user_id') 
+    user_id = request.args.get('user_id')
     with Session() as db_session:
         providers = db_session.query(Provider).filter_by(id=user_id).first()
         if providers:
@@ -263,20 +264,25 @@ def view_slot():
 @login_required
 def book_slot():
     slot_id = request.args.get('slot_id')
-    #slot_id = request.args.get('booked_slots.id')
+    user_id = request.args.get('user_id')
     with Session() as db_session:
+        slot = db_session.query(Slot).filter_by(id=slot_id).first()
+        #id = slot.provider_id
+        #provider = db_session.query(Provider).filter_by(user_id=user_id).first()
+        client = db_session.query(Client).filter_by(user_id=user_id).first()
         existing_appointment = db_session.query(Appointment).filter_by(slot_id=slot_id).first()
         if existing_appointment:
             return f"Slot already taken. Book for another slot"
-        new_appointment = Appointment(client_id=client_id)
+        new_appointment = Appointment(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time,
+                provider_id=slot.provider_id, client_id=client.id)
         db_session.add(new_appointment)
         db_session.commit()
-        return render_template('/dashboard/appointments/index.html', client_id=current_user.id)
+        return render_template('/dashboard/appointments/client_booked_slot.html')
 
 @app.route('/availableSlots', methods=['GET'], strict_slashes=False)
 @login_required
 def slot():
-    #provider_id = request.args.get('provider_id')
+    provider_id = request.args.get('provider_id')
     #client_id = request.args.get('client_id')
     with Session() as db_session:
         providers = db_session.query(Provider).filter_by(username=current_user.username).first()
@@ -290,13 +296,16 @@ def slot():
 @app.route('/appointments', methods=['GET'], strict_slashes=False)
 @login_required
 def appointment():
-    provider_id = request.args.get('provider_id')
-    slot_id = request.args.get('slot_id')
+    username = request.args.get('username')
+    #slot_id = request.args.get('slot_id')
     with Session() as db_session:
-        appointments = db_session.query(Appointment).filter_by(slot_id=slot_id, provider_id=provider_id).all()
-        if isinstance(current_user, Provider):
-            return render_template('/dashboard/appointments/index.html', provider_id=current_user.id, appointments=appointments)
-        return render_template('/dashboard/appointments/clients.html', client_id=current_user.id, appointments=appointments)
+        #provider = db_session.query(Provider).filter_by(user_id=user_id).all()
+        client = db_session.query(Client).filter_by(username=username).all()
+        appointments = db_session.query(Appointment).all()
+        if appointments:
+            if isinstance(current_user, Provider):
+                return render_template('/dashboard/appointments/index.html', appointments=appointments)
+            return render_template('/dashboard/appointments/clients.html', appointments=appointments)
 
 @app.route('/logout')
 @login_required

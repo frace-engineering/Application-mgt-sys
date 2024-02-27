@@ -6,7 +6,7 @@
     <ul>
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/dashboard/admin">Admin</a></li>
-        <li><a href="/dashboard/users">Users</a></li>
+	<li><a href="{{ url_for('user', username=current_user.username) }}">Users</a></li>
         <li><a href="/dashboard/services">Services</a></li>
         <li><a href="/dashboard/appointments">Appointments</a></li>
     </ul>
