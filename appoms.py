@@ -157,7 +157,7 @@ def load_user(user_id):
 def user():
     """Users dashboard"""
     #if current_user.is_active:
-    username = current_user.username
+    username = request.args.get('username')
     if username is None:
         return redirect(url_for('login'))
     with Session() as db_session:
