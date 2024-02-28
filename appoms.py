@@ -157,7 +157,7 @@ def user():
     if user_id is None:
         return redirect(url_for('login'))
     with Session() as db_session:
-        providerUser = db_session.query(Provider).filter_by(username=current_user.username).first()
+        providerUser = db_session.query(Provider).filter_by(user_id=current_user.id).first()
         if providerUser:
             userName = providerUser.username
             userId = providerUser.id
@@ -168,7 +168,7 @@ def user():
             clients = db_session.query(Client).filter_by(provider_id=userId).all()
             return render_template('/dashboard/providers/index.html', clients=clients, userName=userName, userId=userId,
                     providerName=providerName, providerAddr=providerAddr, email=email, phoneNumber=phoneNumber)
-        clientUser = db_session.query(Client).filter_by(username=current_user.username).first()
+        clientUser = db_session.query(Client).filter_by(user_id=current_user.id).first()
         if clientUser:
             userName = clientUser.username
             userId = clientUser.id
@@ -238,7 +238,8 @@ def createSlot():
                 db_session.commit()
                 return render_template('/dashboard/appointments/index.html')
             if providers.id == existing_slot.provider_id:
-                return f"Slot already booked."
+                flash('Slot already created')
+                return redirect(url_for('createSlot'))
             new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, provider_id=providers.id)
             db_session.add(new_slot)
             db_session.commit()
@@ -268,7 +269,8 @@ def book_slot():
         client = db_session.query(Client).filter_by(user_id=user_id).first()
         existing_appointment = db_session.query(Appointment).filter_by(week_day=slot.week_day, start_time=slot.start_time).first()
         if existing_appointment:
-            return f"Slot already taken. Book for another slot"
+            flash('Slot already taken. Book for another slot.')
+            return redirect(url_for('book_slot'))
         new_appointment = Appointment(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time,
                 provider_id=slot.provider_id, client_id=client.id)
         db_session.add(new_appointment)
@@ -281,7 +283,7 @@ def slot():
     provider_id = request.args.get('provider_id')
     #client_id = request.args.get('client_id')
     with Session() as db_session:
-        providers = db_session.query(Provider).filter_by(username=current_user.username).first()
+        providers = db_session.query(Provider).filter_by(provider_id=current_user.id).first()
         #slots = db_session.query(Slot).filter(or_(Slot.provider_id == provider_id, Slot.client_id == client_id)).all()
         slots = db_session.query(Slot).filter_by(provider_id=providers.id).all()
         if slots:
