@@ -121,6 +121,11 @@ def client_signup():
             return render_template('welcome.html', username=new_user.username)
     return render_template('client_signup.html') 
 
+@login_manager.user_loader
+def load_user(user_id):
+    with Session() as db_session:
+        return db_session.query(User).filter_by(id=(str(user_id))).first()
+
 @app.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     """Existing user login method"""
@@ -133,35 +138,26 @@ def login():
             this_user = db_session.query(User).filter_by(username=username).first()
             if not this_user:
                 flash("Error! User does not exist")
-                return redirect(url_for('login'))
+                return f"User does not exist."
             if  check_password_hash(this_user.password, password):
                 if this_user.username == 'admin':
                     login_user(this_user, remember=remember)
-                    return redirect(url_for('dashboard', current_user=this_user))
+                    return redirect(url_for('dashboard'))
                 else:
                     login_user(this_user, remember=remember)
-                    return redirect(url_for('user', current_user=this_user))
-            else:
-                flash("Error! User does not exist")
-                return redirect(url_for('login'))
+                    return redirect(url_for('user', user_id=current_user.id))
     return render_template('login.html') 
-
-@login_manager.user_loader
-def load_user(user_id):
-    with Session() as db_session:
-        user_id = db_session.query(User).get(str(user_id))
-        return user_id
 
 @app.route('/dashboard/user', methods=['GET'], strict_slashes=False)
 @login_required
 def user():
     """Users dashboard"""
     #if current_user.is_active:
-    username = request.args.get('username')
-    if username is None:
+    user_id = request.args.get('user_id')
+    if user_id is None:
         return redirect(url_for('login'))
     with Session() as db_session:
-        providerUser = db_session.query(Provider).filter_by(username=username).first()
+        providerUser = db_session.query(Provider).filter_by(username=current_user.username).first()
         if providerUser:
             userName = providerUser.username
             userId = providerUser.id
@@ -172,7 +168,7 @@ def user():
             clients = db_session.query(Client).filter_by(provider_id=userId).all()
             return render_template('/dashboard/providers/index.html', clients=clients, userName=userName, userId=userId,
                     providerName=providerName, providerAddr=providerAddr, email=email, phoneNumber=phoneNumber)
-        clientUser = db_session.query(Client).filter_by(username=username).first()
+        clientUser = db_session.query(Client).filter_by(username=current_user.username).first()
         if clientUser:
             userName = clientUser.username
             userId = clientUser.id
@@ -270,7 +266,7 @@ def book_slot():
         #id = slot.provider_id
         #provider = db_session.query(Provider).filter_by(user_id=user_id).first()
         client = db_session.query(Client).filter_by(user_id=user_id).first()
-        existing_appointment = db_session.query(Appointment).filter_by(slot_id=slot_id).first()
+        existing_appointment = db_session.query(Appointment).filter_by(week_day=slot.week_day, start_time=slot.start_time).first()
         if existing_appointment:
             return f"Slot already taken. Book for another slot"
         new_appointment = Appointment(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time,
@@ -299,13 +295,37 @@ def appointment():
     username = request.args.get('username')
     #slot_id = request.args.get('slot_id')
     with Session() as db_session:
-        #provider = db_session.query(Provider).filter_by(user_id=user_id).all()
-        client = db_session.query(Client).filter_by(username=username).all()
-        appointments = db_session.query(Appointment).all()
-        if appointments:
-            if isinstance(current_user, Provider):
-                return render_template('/dashboard/appointments/index.html', appointments=appointments)
+        provider = db_session.query(Provider).filter_by(username=current_user.username).first()
+        client = db_session.query(Client).filter_by(username=current_user.username).first()
+        if provider:
+            appointments = db_session.query(Appointment).filter_by(provider_id=provider.id).all()
+            return render_template('/dashboard/appointments/index.html', appointments=appointments)
+        elif client:
+            appointments = db_session.query(Appointment).filter_by(client_id=client.id).all()
             return render_template('/dashboard/appointments/clients.html', appointments=appointments)
+        else:
+            return f"Your have no view access."
+
+@app.route('/change-password', methods=['GET', 'POST'], strict_slashes=False)
+@login_required
+def change_password():
+    if request.method == 'POST':
+        old_password = request.form['old-password']
+        new_password = request.form['new-password']
+        confirm_new_password = request.form['confirm-new-password']
+        with Session() as db_session:
+            if  check_password_hash(current_user.password, old_password):
+                if new_password == confirm_new_password:
+                    password = generate_password_hash(password, method='pbkdf2:sha256')
+                    current_user.password = password
+                    db_session.commit()
+                    return f"Password changed successfully."
+                return f"New passwod mismatch."
+            return f"Incorrect password. Please try again."
+        return render_template('index.html')
+    return render_template('change_password.html')
+
+
 
 @app.route('/logout')
 @login_required

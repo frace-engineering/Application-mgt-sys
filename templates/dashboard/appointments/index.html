@@ -4,13 +4,13 @@
 
     <div style="text-align:right">
         <button type="button" class="btn btn-primary">
-		<a  href="{{ url_for('appointment', username=current_user.username) }}">Appointments</a>
+		<a  href="{{ url_for('appointment', user_id=current_user.id) }}">Appointments</a>
         </button>
         <button type="button" class="btn btn-primary">
-		<a  href="{{ url_for('slot', username=current_user.username) }}">Slots</a>
+		<a  href="{{ url_for('slot', user_id=current_user.id) }}">Slots</a>
         </button>
         <button type="button" class="btn btn-primary">
-		<a  href="{{ url_for('createSlot', username=current_user.username) }}">Create slot</a>
+		<a  href="{{ url_for('createSlot', user_id=current_user.id) }}">Create slot</a>
         </button>
     </div>
 
@@ -30,7 +30,7 @@
             <tbody class="table-group-divider">
 		    {% for slot in slots %}
               <tr>
-		      <td><a href="{{ url_for('book_slot', id=slot.id) }}">{{ slot.id }}</a></td>
+		      <td><a href="{{ url_for('book_slot', slot_id=slot.id) }}">{{ slot.id }}</a></td>
               <th scope="row">{{ slot.week_day }}</th>
 	      <td style="cursor: pointer">{{ slot.start_time }}</td>
 	      <td>{{ slot.end_time }}</td>
