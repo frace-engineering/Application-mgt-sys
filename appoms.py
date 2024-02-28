@@ -267,7 +267,7 @@ def book_slot():
         #id = slot.provider_id
         #provider = db_session.query(Provider).filter_by(user_id=user_id).first()
         client = db_session.query(Client).filter_by(user_id=user_id).first()
-        existing_appointment = db_session.query(Appointment).filter_by(week_day=slot.week_day, start_time=slot.start_time).first()
+        existing_appointment = db_session.query(Appointment).filter_by(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time).first()
         if existing_appointment:
             flash('Slot already taken. Book for another slot.')
             return redirect(url_for('book_slot'))
@@ -280,10 +280,10 @@ def book_slot():
 @app.route('/availableSlots', methods=['GET'], strict_slashes=False)
 @login_required
 def slot():
-    provider_id = request.args.get('provider_id')
+    #provider_id = request.args.get('provider_id')
     #client_id = request.args.get('client_id')
     with Session() as db_session:
-        providers = db_session.query(Provider).filter_by(provider_id=current_user.id).first()
+        providers = db_session.query(Provider).filter_by(user_id=current_user.id).first()
         #slots = db_session.query(Slot).filter(or_(Slot.provider_id == provider_id, Slot.client_id == client_id)).all()
         slots = db_session.query(Slot).filter_by(provider_id=providers.id).all()
         if slots:
