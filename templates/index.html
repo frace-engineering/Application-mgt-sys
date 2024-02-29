@@ -1,7 +1,11 @@
 
 {% extends 'main.html' %}
 {% block content %}
+{% if msg %}
+<h4>{{ msg }}
+	{% else %}
 <h4>{% block title %} Existing user! <a href="{{ url_for('login') }}">Sign in</a> {% endblock %}</h4>
 	<p>{{ db }}</p>
+{% endif %}
 {% endblock %}
 

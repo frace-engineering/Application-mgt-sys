@@ -13,7 +13,6 @@
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Week day</th>
                 <th scope="col">Start Time</th>
                 <th scope="col">End Time</th>
                 <th scope="col">provider_id</th>
@@ -25,7 +24,6 @@
 		    {% for slot in slots %}
               <tr>
 		      <td><a href="{{ url_for('book_slot', slot_id=slot.id) }}">{{ slot.id }}</a></td>
-              <th scope="row">{{ slot.week_day }}</th>
 	      <td style="cursor: pointer">{{ slot.start_time }}</td>
 	      <td>{{ slot.end_time }}</td>
               <td>{{ slot.provider_id }}</td>

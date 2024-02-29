@@ -23,7 +23,6 @@
                 <th scope="col">provider_id</th>
                 <th scope="col">client_id</th>
                 <th scope="col">service_id</th>
-                <th scope="col">Day</th>
                 <th scope="col">Time</th>
               </tr>
             </thead>
@@ -34,7 +33,6 @@
      {% for slot in slots %}
 <tbody class="table-group-divider">
               <tr>
-              <th scope="row">{{ slot.week_day }}</th>
 	      <td style="cursor: pointer">{{ slot.start_time }}</td>
 	      <td>{{ slot.end_time }}</td>
               <td>{{ slot.id }}</td>

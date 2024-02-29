@@ -60,10 +60,9 @@ CREATE TABLE IF NOT EXISTS services (
        	FOREIGN KEY(provider_id) REFERENCES providers(id)
 );
 
-CREATE TABLE IF NOT EXISTS booked_slots (
+CREATE TABLE IF NOT EXISTS slots (
 	id INT PRIMARY KEY AUTO_INCREMENT,
        	service_name VARCHAR(228),
-	week_day VARCHAR(228),
 	start_time DATETIME,
 	end_time DATETIME,
 	provider_id INT,
@@ -75,7 +74,6 @@ CREATE TABLE IF NOT EXISTS booked_slots (
 CREATE TABLE IF NOT EXISTS appointments (
 	id INT PRIMARY KEY AUTO_INCREMENT,
        	service_name VARCHAR(228),
-	week_day VARCHAR(228),
 	start_time DATETIME,
 	end_time DATETIME,
        	description VARCHAR(500) NOT NULL,
@@ -87,5 +85,5 @@ CREATE TABLE IF NOT EXISTS appointments (
        	FOREIGN KEY(provider_id) REFERENCES providers(id),
        	FOREIGN KEY(client_id) REFERENCES clients(id),
        	FOREIGN KEY(service_id) REFERENCES services(id),
-       	FOREIGN KEY(slot_id) REFERENCES booked_slots(id)
+       	FOREIGN KEY(slot_id) REFERENCES slots(id)
 );

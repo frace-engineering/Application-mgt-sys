@@ -226,21 +226,20 @@ def our_services():
 def createSlot():
     if request.method == 'POST':
         #provider_id = request.args.get('providers.id')
-        week_day = request.form['week-day']
         start_time = request.form['start-time']
         end_time = request.form['end-time']
         with Session() as db_session:
             providers = db_session.query(Provider).filter_by(username=current_user.username).first()
-            existing_slot = db_session.query(Slot).filter_by(week_day=week_day, start_time=start_time).first()
+            existing_slot = db_session.query(Slot).filter_by(start_time=start_time).first()
             if not existing_slot:
-                new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, provider_id=providers.id)
+                new_slot = Slot(start_time=start_time, end_time=end_time, provider_id=providers.id)
                 db_session.add(new_slot)
                 db_session.commit()
                 return render_template('/dashboard/appointments/index.html')
             if providers.id == existing_slot.provider_id:
                 flash('Slot already created')
                 return redirect(url_for('createSlot'))
-            new_slot = Slot(week_day=week_day, start_time=start_time, end_time=end_time, provider_id=providers.id)
+            new_slot = Slot(start_time=start_time, end_time=end_time, provider_id=providers.id)
             db_session.add(new_slot)
             db_session.commit()
             return render_template('/dashboard/appointments/index.html')
@@ -267,11 +266,11 @@ def book_slot():
         #id = slot.provider_id
         #provider = db_session.query(Provider).filter_by(user_id=user_id).first()
         client = db_session.query(Client).filter_by(user_id=user_id).first()
-        existing_appointment = db_session.query(Appointment).filter_by(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time).first()
+        existing_appointment = db_session.query(Appointment).filter_by(start_time=slot.start_time, end_time=slot.end_time).first()
         if existing_appointment:
             flash('Slot already taken. Book for another slot.')
             return redirect(url_for('book_slot'))
-        new_appointment = Appointment(week_day=slot.week_day, start_time=slot.start_time, end_time=slot.end_time,
+        new_appointment = Appointment(start_time=slot.start_time, end_time=slot.end_time,
                 provider_id=slot.provider_id, client_id=client.id)
         db_session.add(new_appointment)
         db_session.commit()
@@ -318,12 +317,12 @@ def change_password():
         with Session() as db_session:
             if  check_password_hash(current_user.password, old_password):
                 if new_password == confirm_new_password:
-                    password = generate_password_hash(password, method='pbkdf2:sha256')
-                    current_user.password = password
+                    new_password = generate_password_hash(new_password, method='pbkdf2:sha256')
+                    current_user.password = new_password
                     db_session.commit()
-                    return f"Password changed successfully."
+                    return render_template('index.html', msg="Password changed successfully.")
                 return f"New passwod mismatch."
-            return f"Incorrect password. Please try again."
+            return render_template('index.html', msg="Incorrect password. Please try again.")
         return render_template('index.html')
     return render_template('change_password.html')
 

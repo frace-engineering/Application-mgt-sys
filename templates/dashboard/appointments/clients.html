@@ -16,7 +16,6 @@
             <thead>
               <tr>
                 <th scope="col">Slot Id</th>
-                <th scope="col">Week day</th>
                 <th scope="col">Start Time</th>
                 <th scope="col">End Time</th>
                 <th scope="col">provider_id</th>
@@ -27,8 +26,7 @@
             <tbody class="table-group-divider">
 		    {% for slot in slots %}
               <tr>
-		      <td><a href="{{ url_for('book_slot', slot_id=slot.id, user_id=current_user.id) }}">{{ slot.id }}</a></td>
-              <th scope="row">{{ slot.week_day }}</th>
+	      <td><a href="{{ url_for('book_slot', slot_id=slot.id, user_id=current_user.id) }}">{{ slot.id }}</a></td>
 	      <td style="cursor: pointer">{{ slot.start_time }}</td>
 	      <td>{{ slot.end_time }}</td>
               <td>{{ slot.provider_id }}</td>
@@ -42,7 +40,6 @@
 		    {% for appointment in appointments %}
               <tr>
 		      <td>{{ appointment.id }}</a></td>
-              <th scope="row">{{ appointment.week_day }}</th>
 	      <td style="cursor: pointer">{{ appointment.start_time }}</td>
 	      <td>{{ appointment.end_time }}</td>
               <td>{{ appointment.provider_id }}</td>

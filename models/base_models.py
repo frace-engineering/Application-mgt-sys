@@ -67,7 +67,7 @@ class Provider(UserMixin, Base):
     appointments = relationship("Appointment", back_populates="providers", cascade="all, delete-orphan")
     clients = relationship("Client", back_populates="providers", cascade="all, delete-orphan")
     services = relationship("Service", back_populates="providers", cascade="all, delete-orphan")
-    booked_slots = relationship('Slot', back_populates="providers")
+    slots = relationship('Slot', back_populates="providers")
 
     def __repr__(self):
         return f"<Provider(provider_name='%s', provider_address='%s', phone_number='%s', email='%s')>" % (
@@ -93,7 +93,7 @@ class Client(UserMixin, Base):
     users = relationship("User", back_populates="clients")
     appointments = relationship("Appointment", back_populates="clients", cascade="all, delete-orphan")
     providers = relationship("Provider", back_populates="clients")
-    booked_slots = relationship('Slot', back_populates="clients")
+    slots = relationship('Slot', back_populates="clients")
 
     def __repr__(self):
         return f"<Client(user_name='%s', first_name='%s', last_name='%s' phone_number='%s', email='%s')>" % (
@@ -126,12 +126,11 @@ class Appointment(Base):
     __tablename__ = "appointments"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     service_name = Column(String(158))
-    week_day = Column(Enum('Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'))
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     description = Column(String(300), default="")
     location = Column(String(128), default="")
-    slot_id = Column(Integer, ForeignKey("booked_slots.id"))
+    slot_id = Column(Integer, ForeignKey("slots.id"))
     provider_id = Column(Integer, ForeignKey("providers.id"))
     client_id = Column(Integer, ForeignKey("clients.id"))
     service_id = Column(Integer, ForeignKey("services.id"))
@@ -139,7 +138,7 @@ class Appointment(Base):
     providers = relationship("Provider", back_populates="appointments")
     clients = relationship("Client", back_populates="appointments")
     services = relationship("Service", back_populates="appointments")
-    booked_slots = relationship('Slot', back_populates="appointments")
+    slots = relationship('Slot', back_populates="appointments")
 
     def __repr__(self):
         return f"<Appointment(service_name='%s', date_time='%s', description='%s', location='%s')>" % (
@@ -150,18 +149,17 @@ class Appointment(Base):
                 )
 
 class Slot(Base):
-    __tablename__ = "booked_slots"
+    __tablename__ = "slots"
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     service_name = Column(String(228))
-    week_day = Column(Enum('Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'))
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     client_id = Column(Integer, ForeignKey('clients.id'))
     provider_id = Column(Integer, ForeignKey('providers.id'))
 
-    clients = relationship('Client', back_populates="booked_slots")
-    providers = relationship('Provider', back_populates="booked_slots")
-    appointments = relationship('Appointment', back_populates="booked_slots")
+    clients = relationship('Client', back_populates="slots")
+    providers = relationship('Provider', back_populates="slots")
+    appointments = relationship('Appointment', back_populates="slots")
 
 #Provider.appointments = relationship('Appointment', back_populates="providers")
 
